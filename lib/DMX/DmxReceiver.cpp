@@ -9,22 +9,22 @@ static volatile uint8_t *inactiveBuffer;
 static volatile uint16_t dmxBufferIndex;
 static volatile unsigned int frameCount=0;
 static volatile bool newFrame=false;
-HardwareSerial Uart = HardwareSerial();
+
 
 void dmx_begin(void)
 {
 	//UART Initialization
-	Uart.begin(250000);
-	UART0_C3 = UART_C3_FEIE;  //Enable UART0 interrupt on frame error
-	NVIC_ENABLE_IRQ(IRQ_UART0_ERROR);  //Enable the frame error IRQ
+	Serial2.begin(250000);
+	UART1_C3 = UART_C3_FEIE;  //Enable UART0 interrupt on frame error
+	NVIC_ENABLE_IRQ(IRQ_UART1_ERROR);  //Enable the frame error IRQ
 	activeBuffer=dmxBuffer1;
 	inactiveBuffer=dmxBuffer2;
 }
 
 void dmx_end(void)
 {
-	Uart.end();
-	NVIC_DISABLE_IRQ(IRQ_UART0_ERROR);  //Enable the frame error IRQ
+	Serial2.end();
+	NVIC_DISABLE_IRQ(IRQ_UART1_ERROR);  //Disable the frame error IRQ
 }
 
 unsigned int dmx_frameCount(void)
@@ -40,11 +40,11 @@ uint8_t dmx_getDimmer(uint16_t d)
 int dmx_bufferService (void)
 {
 	__disable_irq(); //Prevents conflicts with the UART0 error ISR
-	int available=Uart.available();
+	int available=Serial2.available();
 	int retval=available;
 	while (available--)
 	{
-		activeBuffer[dmxBufferIndex]=Uart.read();
+		activeBuffer[dmxBufferIndex]=Serial2.read();
 		if (dmxBufferIndex<(DMX_BUFFER_SIZE-1)) dmxBufferIndex++;
 	}
 	__enable_irq();
@@ -65,9 +65,9 @@ bool dmx_newFrame(void)
 //and reset the index to zero
 void uart0_error_isr(void)
 {
-		if (UART0_S1 & UART_S1_FE)
+		if (UART1_S1 & UART_S1_FE)
 		{
-			uint8_t c = UART0_D;
+			uint8_t c = UART1_D;
 			frameCount++;
 			dmx_bufferService();
 			dmxBufferIndex=0;
