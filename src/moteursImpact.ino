@@ -18,7 +18,7 @@ void setup()
   Serial.begin(9600);
   delay(1000);
   Serial.println("____DMX MOTEURS IMPACT___ ");
-  Serial.print("DMX address for speed is :");serial.println("DMX_FIRST_ADDRESS");
+  Serial.print("DMX address for speed is :");Serial.println("DMX_FIRST_ADDRESS");
 
   #endif
 }
