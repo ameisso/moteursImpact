@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include <DmxReceiver.h>
-DmxReceiver DMX = DmxReceiver();
+//#include <DmxReceiver.h>
+//DmxReceiver DMX = DmxReceiver();
 
 
 #define DMX_FIRST_ADDRESS 1
@@ -25,7 +25,7 @@ void setup()
 
 void loop()
 {
-  DMX.bufferService();
+  /*DMX.bufferService();
   delay(2);
   if (DMX.newFrame())
   {
@@ -33,13 +33,12 @@ void loop()
     Serial.print("Speed :");  Serial.println(DMX.getDimmer(DMX_FIRST_ADDRESS), DEC);
     analogWrite(SPEED_PIN,DMX.getDimmer(DMX_FIRST_ADDRESS));
     #endif
-  }
+  }*/
 
   if (Serial.available() > 0)
   {
     int incomingByte = 0;
     incomingByte = Serial.read();
-
     incomingByte  = map(incomingByte,97,122,0,255);
     Serial.print("I received: ");
     Serial.println(incomingByte, DEC);
