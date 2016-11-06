@@ -37,9 +37,13 @@ void loop()
   {
     int incomingByte = 0;
     incomingByte = Serial.read();
-    if (incomingByte > 0)
+    if (incomingByte != 97)
     {
       incomingByte  = map(incomingByte, 97, 122, MIN_SPEED, 255);
+    }
+    else
+    {
+      incomingByte = 0;
     }
     Serial.print("I received: ");
     Serial.println(incomingByte, DEC);
