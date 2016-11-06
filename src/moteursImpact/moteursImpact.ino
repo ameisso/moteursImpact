@@ -1,5 +1,3 @@
-#include <Arduino.h>
-#include <DMXSerial.h>
 
 #define DMX_FIRST_ADDRESS 1
 #define LED_PIN 13
@@ -7,30 +5,33 @@
 #define MIN_SPEED 81
 //#define DEBUG
 
+#include <Arduino.h>
+
+#ifndef DEBUG
+#include <DMXSerial.h>
+#endif
+
+
+
 void blinkLed(int times);
 void setup()
 {
   pinMode(LED_PIN, OUTPUT);
   pinMode(SPEED_PIN, OUTPUT);
+  analogWrite(SPEED_PIN, 0);
   blinkLed(3);
 #ifdef DEBUG
   Serial.begin(57600);
   delay(1000);
   Serial.println("____DMX MOTEURS IMPACT___ ");
   Serial.print("DMX address for speed is :"); Serial.println(DMX_FIRST_ADDRESS);
-#endif
+#else
   DMXSerial.init(DMXController);
+#endif
 }
 
 void loop()
 {
-  unsigned long lastPacket = DMXSerial.noDataSince();
-  if (lastPacket < 1000 )
-  {
-    int dmxValue = DMXSerial.read(DMX_FIRST_ADDRESS);
-    dmxValue = map(dmxValue, 0, 255, MIN_SPEED, 255);
-    analogWrite(SPEED_PIN, dmxValue);
-  }
 #ifdef DEBUG
   if (Serial.available() > 0)
   {
@@ -40,6 +41,18 @@ void loop()
     Serial.print("I received: ");
     Serial.println(incomingByte, DEC);
     analogWrite(SPEED_PIN, incomingByte);
+  }
+#else
+  unsigned long lastPacket = DMXSerial.noDataSince();
+  if (lastPacket < 1000 )
+  {
+    int dmxValue = DMXSerial.read(DMX_FIRST_ADDRESS);
+    dmxValue = map(dmxValue, 0, 255, MIN_SPEED, 255);
+    analogWrite(SPEED_PIN, dmxValue);
+  }
+  else
+  {
+    analogWrite(SPEED_PIN, 0);
   }
 #endif
 }
