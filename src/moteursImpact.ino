@@ -15,10 +15,10 @@ void setup()
   pinMode(SPEED_PIN,OUTPUT);
   blinkLed(3);
   #ifdef DEBUG
-  Serial.begin(9600);
+  Serial.begin(57600);
   delay(1000);
   Serial.println("____DMX MOTEURS IMPACT___ ");
-  Serial.print("DMX address for speed is :");Serial.println("DMX_FIRST_ADDRESS");
+  Serial.print("DMX address for speed is :");Serial.println(DMX_FIRST_ADDRESS);
 
   #endif
 }
@@ -33,6 +33,17 @@ void loop()
     Serial.print("Speed :");  Serial.println(DMX.getDimmer(DMX_FIRST_ADDRESS), DEC);
     analogWrite(SPEED_PIN,DMX.getDimmer(DMX_FIRST_ADDRESS));
     #endif
+  }
+
+  if (Serial.available() > 0)
+  {
+    int incomingByte = 0;
+    incomingByte = Serial.read();
+
+    incomingByte  = map(incomingByte,97,122,0,255);
+    Serial.print("I received: ");
+    Serial.println(incomingByte, DEC);
+    analogWrite(SPEED_PIN,incomingByte);
   }
 }
 
