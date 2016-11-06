@@ -37,7 +37,7 @@ void loop()
   {
     int incomingByte = 0;
     incomingByte = Serial.read();
-    incomingByte  = map(incomingByte, 97, 122, 0, 255);
+    incomingByte  = map(incomingByte, 97, 122, MIN_SPEED, 255);
     Serial.print("I received: ");
     Serial.println(incomingByte, DEC);
     analogWrite(SPEED_PIN, incomingByte);
