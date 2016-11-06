@@ -1,4 +1,3 @@
-
 #define DMX_FIRST_ADDRESS 1
 #define LED_PIN 13
 #define SPEED_PIN 3
@@ -63,6 +62,7 @@ void loop()
   else
   {
     analogWrite(SPEED_PIN, 0);
+    blink(1);
   }
 #endif
 }
