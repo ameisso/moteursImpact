@@ -3,7 +3,7 @@
 #define LED_PIN 13
 #define SPEED_PIN 3
 #define MIN_SPEED 81
-//#define DEBUG
+#define DEBUG
 
 #include <Arduino.h>
 
@@ -37,7 +37,10 @@ void loop()
   {
     int incomingByte = 0;
     incomingByte = Serial.read();
-    incomingByte  = map(incomingByte, 97, 122, MIN_SPEED, 255);
+    if (incomingByte > 0)
+    {
+      incomingByte  = map(incomingByte, 97, 122, MIN_SPEED, 255);
+    }
     Serial.print("I received: ");
     Serial.println(incomingByte, DEC);
     analogWrite(SPEED_PIN, incomingByte);
@@ -47,7 +50,10 @@ void loop()
   if (lastPacket < 1000 )
   {
     int dmxValue = DMXSerial.read(DMX_FIRST_ADDRESS);
-    dmxValue = map(dmxValue, 0, 255, MIN_SPEED, 255);
+    if (dmxValue > 0)
+    {
+      dmxValue = map(dmxValue, 0, 255, MIN_SPEED, 255);
+    }
     analogWrite(SPEED_PIN, dmxValue);
   }
   else
