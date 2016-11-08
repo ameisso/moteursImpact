@@ -62,7 +62,7 @@ void loop()
   else
   {
     analogWrite(SPEED_PIN, 0);
-    blink(1);
+    blinkLed(1);
   }
 #endif
 }
